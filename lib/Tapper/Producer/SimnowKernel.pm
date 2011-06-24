@@ -88,26 +88,3 @@ class Tapper::Producer::SimnowKernel
 }
 
 1;
-
-__END__
-
-=head1 NAME
-
-Tapper::MCP::Scheduler::PreconditionProducer::Kernel - Produces required preconditions for kernel tests
-
-=head1 SYNOPSIS
-
-
-=cut
-
-=head2 features
-
-=head1 AUTHOR
-
-Maik Hentsche, C<< <maik.hentsche at amd.com> >>
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008-2011 AMD OSRC Tapper Team, all rights reserved.
-
-This program is released under the following license: freebsd
