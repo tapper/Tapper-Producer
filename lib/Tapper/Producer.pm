@@ -7,7 +7,7 @@ use Moose;
 
 =head1 NAME
 
-Tapper::Producer - Tapper - Base module for Tappers precondition producer modules!
+Tapper::Producer - Tapper - Precondition producers (base class)
 
 =cut
 
