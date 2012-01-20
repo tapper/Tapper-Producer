@@ -13,6 +13,9 @@ build_requires 'Test::Perl::Critic';
 
 author_requires 'Module::Install::WriteAll';
 
+requires 'Net::SSH::Perl';
+requires 'YAML';
+
 auto_install;
 
 repository 'git://github.com/amd/Tapper-Producer.git';
