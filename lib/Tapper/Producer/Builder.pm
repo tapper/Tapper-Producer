@@ -32,7 +32,7 @@ like this:
 =cut
 
 ## no critic (RequireUseStrict)
-class Tapper::Producer::Builder
+class Tapper::Producer::Builder extends Tapper::Base
 {
         use Net::SSH::Perl;
         use Tapper::Config;
@@ -53,7 +53,7 @@ The following options are recognised in the producer precondition:
 * version     - string - a version string for the repository as understood by the buildserver (optional)
 * patches     - array of string - filenames of patch files, need to be available to build server (optional)
 
-@param Job object - only there to match producer API, currently unused
+@param Job object - the job we build a package for
 @param hash ref   - producer precondition
 
 @return success - hash ref containing list of new preconditions
@@ -62,7 +62,7 @@ The following options are recognised in the producer precondition:
 
 =cut
 
-        method produce(Any $job, HashRef $produce) {
+        method produce(Any $job  where {$_ and $_->can('testrun_id')}, HashRef $produce) {
                 my $type = $produce->{type} // '';
                 my $host = $produce->{buildserver} || return "Missing required parameter 'buildserver' in ".__PACKAGE__ ;
                 my $repo = $produce->{repository}  || return "Missing required parameter 'repository' in ".__PACKAGE__;
@@ -86,6 +86,28 @@ The following options are recognised in the producer precondition:
                 }
 
                 my($stdout, $stderr, $exit) = $ssh->cmd("NOSCHED=1 $cmd");
+
+                my $path = $self->cfg->{paths}{output_dir};
+                my $testrun_id = $job->testrun_id();
+                $path .= "/$testrun_id/config/builder/";
+                $self->makedir($path);
+
+                my $filename = "$path/${type}_${host}_${repo}_${rev}";
+                my $prefix   = "\n\n\t\tNext build".("="x80)."\n\n";
+                open(my $fh_stdout, ">>", $filename.".stdout");
+                open(my $fh_stderr, ">>", $filename.".stderr");
+
+                # append output after that of other builder producers
+                print $fh_stdout $prefix if -s $filename.".stdout";
+                print $fh_stderr $prefix if -s $filename.".stderr";
+
+                {
+                        # don't care whether build server provided stdout or stderr
+                        no warnings 'uninitialized';
+
+                        print $fh_stdout $stdout;
+                        print $fh_stderr $stderr;
+                }
 
                 if ($stdout =~ m|^### (.+)$|m) {
                         $new_precondition = {precondition_type => 'package', filename => $1};
