@@ -15,6 +15,9 @@ author_requires 'Module::Install::WriteAll';
 
 requires 'Net::SSH::Perl';
 requires 'YAML';
+requires 'Tapper::Config';
+requires 'Tapper::Base';
+
 
 auto_install;
 
