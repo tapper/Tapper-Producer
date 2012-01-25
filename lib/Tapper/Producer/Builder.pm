@@ -104,7 +104,7 @@ The following options are recognised in the producer precondition:
                 {
                         # don't care whether build server provided stdout or stderr
                         no warnings 'uninitialized';
-
+                        print $fh_stdout "Patch files: ", join(" ", @$patches) if @$patches;
                         print $fh_stdout $stdout;
                         print $fh_stderr $stderr;
                 }
