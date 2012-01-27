@@ -34,8 +34,8 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
                 my $host =  $job->host->name;
                 $ENV{TAPPER_TEMARE} = $file;
                 my $cmd="$temare_path/temare subjectprep $host $subject $bitness";
-                my $yaml = qx($cmd);
-                die $yaml if $?;
+                my $precondition = qx($cmd);
+                die $precondition if $?;
                 
                 my $config = LoadFile($file);
                 close $fh;
@@ -43,7 +43,7 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
                 my $topic = $config->{subject} || 'Misc';
                 return {
                         topic => $topic,
-                        precondition_yaml => $yaml
+                        precondition_yaml => $precondition
                        };
         }
 
