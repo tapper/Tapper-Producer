@@ -20,8 +20,8 @@ class Tapper::Producer::Temare
                 my $host =  $job->host->name;
                 $ENV{TAPPER_TEMARE} = $file;
                 my $cmd="$temare_path/temare subjectprep $host $subject $bitness";
-                my $yaml = qx($cmd);
-                return {error => $yaml} if $?;
+                my $precondition = qx($cmd);
+                return {error => $precondition} if $?;
                 
                 my $config = LoadFile($file);
                 close $fh;
@@ -29,7 +29,7 @@ class Tapper::Producer::Temare
                 my $topic = $config->{subject} || 'Misc';
                 return {
                         topic => $topic,
-                        precondition_yaml => $yaml
+                        precondition_yaml => $precondition
                        };
         }
 
