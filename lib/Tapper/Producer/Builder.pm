@@ -109,10 +109,10 @@ The following options are recognised in the producer precondition:
                         print $fh_stderr $stderr;
                 }
 
-                if ($stdout =~ m|^### (.+)$|m) {
-                        $new_precondition = {precondition_type => 'package', filename => $1};
+                if ($stdout =~ m/^(###|tarball created: ) (.+)$/m ) {
+                        $new_precondition = {precondition_type => 'package', filename => $2};
                 } else {
-                        return "Build server did not provide a package file name for ".__PACKAGE__;
+                        return {error => "Build server did not provide a package file name for ".__PACKAGE__};
                 }
                 return {precondition_yaml => YAML::Dump($new_precondition)};
         }
