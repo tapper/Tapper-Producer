@@ -30,7 +30,8 @@ returned by it.
 
 @return success - hash ref containing list of new preconditions and a
                   new topic (optional)
-@return error   - error string
+
+@throws die()
 
 =cut
 
@@ -41,7 +42,7 @@ sub produce
         my $producer_name = $precond_hash->{producer};
 
         eval "use Tapper::Producer::$producer_name"; ## no critic (ProhibitStringyEval)
-        return "Can not load producer '$producer_name': $@" if $@;
+        die "Can not load producer '$producer_name': $@" if $@;
 
         my $producer = "Tapper::Producer::$producer_name"->new();
         return $producer->produce($job, $precond_hash);

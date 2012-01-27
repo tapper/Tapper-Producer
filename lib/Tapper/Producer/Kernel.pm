@@ -23,7 +23,7 @@ class Tapper::Producer::Kernel
                 } elsif ($kernelbuild =~ m/bz2$/) {
                         @files = qx(tar -tjf $kernelbuild);
                 } else {
-                        return {error => 'Can not detect type of file $kernelbuild. Supported types are tar.gz and tar.bz2'};
+                        die 'Can not detect type of file $kernelbuild. Supported types are tar.gz and tar.bz2';
                 }
                 chomp @files;
                 foreach my $file (@files) {
@@ -46,14 +46,9 @@ class Tapper::Producer::Kernel
                 my $version     = '*';
                 $version       .= "$produce->{version}*" if $produce->{version};
                 my @kernelfiles = sort younger <$kernel_path/$project/$version>;
-                return {
-                        error => 'No kernel files found',
-                       } if not @kernelfiles;
+                die 'No kernel files found' if not @kernelfiles;
                 my $kernelbuild = pop @kernelfiles;
                 my $retval  = $self->get_version($kernelbuild);
-                if ($retval->{error}) {
-                        return $retval;
-                }
                 my $kernel_version = $retval->{version};
                 my ($kernel_major_version) = $kernel_version =~ m/(2\.\d{1,2}\.\d{1,2})/;
                 ($kernelbuild)  = $kernelbuild =~ m|$pkg_dir/(kernel/$project/.+)$|;

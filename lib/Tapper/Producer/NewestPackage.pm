@@ -22,9 +22,7 @@ class Tapper::Producer::NewestPackage
                 my $use_file = pop @files;
 
                 my $nfs = Tapper::Config->subconfig->{paths}{prc_nfs_mountdir};
-                return {
-                        error => "$use_file not available to Installer",
-                       } unless $use_file=~/^$nfs/;
+                die "$use_file not available to Installer" unless $use_file=~/^$nfs/;
 
                 my $retval = [{
                                precondition_type => 'package',

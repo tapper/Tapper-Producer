@@ -37,6 +37,7 @@ class Tapper::Producer::Builder extends Tapper::Base
         use Net::SSH::Perl;
         use Tapper::Config;
         use YAML;
+        use autodie;
 
         use 5.010;
 
@@ -57,15 +58,15 @@ The following options are recognised in the producer precondition:
 @param hash ref   - producer precondition
 
 @return success - hash ref containing list of new preconditions
-@return error   - error string
 
+@throws die();
 
 =cut
 
         method produce(Any $job  where {$_ and $_->can('testrun_id')}, HashRef $produce) {
                 my $type = $produce->{type} // '';
-                my $host = $produce->{buildserver} || return "Missing required parameter 'buildserver' in ".__PACKAGE__ ;
-                my $repo = $produce->{repository}  || return "Missing required parameter 'repository' in ".__PACKAGE__;
+                my $host = $produce->{buildserver} || die "Missing required parameter 'buildserver'";
+                my $repo = $produce->{repository}  || die "Missing required parameter 'repository'";
                 my $rev  = $produce->{version}     || 'HEAD';
                 my $patches = $produce->{patches}  || [];
                 my $cmd;
@@ -74,7 +75,7 @@ The following options are recognised in the producer precondition:
                 given($type) {
                         when('kernel') { $cmd = 'build_kernel.sh' };
                         when('xen')    { $cmd = 'xenbuild.sh' };
-                        default        { return "Unknown build type '$type'"};
+                        default        { die "Unknown build type '$type'"};
                 }
 
                 my $ssh = Net::SSH::Perl->new($host, user => "root", protocol => 2 );
@@ -112,7 +113,7 @@ The following options are recognised in the producer precondition:
                 if ($stdout =~ m/^(###|tarball created: ) (.+)$/m ) {
                         $new_precondition = {precondition_type => 'package', filename => $2};
                 } else {
-                        return {error => "Build server did not provide a package file name for ".__PACKAGE__};
+                        die "Build server did not provide a package file name";
                 }
                 return {precondition_yaml => YAML::Dump($new_precondition)};
         }
