@@ -6,6 +6,7 @@ class Tapper::Producer::Temare
         use File::Temp 'tempfile';
         use YAML       'LoadFile';
         use Tapper::Config;
+        use Try::Tiny;
 
 =head2 produce
 
@@ -37,7 +38,7 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
                 my $precondition = qx($cmd);
                 die $precondition if $?;
                 
-                my $config = LoadFile($file);
+                my $config = try {LoadFile($file)} catch { die "Error occured while loading precondition $precondition:\n$_"};
                 close $fh;
                 unlink $file if -e $file;
                 my $topic = $config->{subject} || 'Misc';
