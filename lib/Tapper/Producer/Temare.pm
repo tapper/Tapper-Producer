@@ -1,8 +1,8 @@
 use MooseX::Declare;
 
 ## no critic (RequireUseStrict)
-class Tapper::Producer::Temare 
-{        
+class Tapper::Producer::Temare
+{
         use File::Temp 'tempfile';
         use YAML       'LoadFile';
         use Tapper::Config;
@@ -28,7 +28,7 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
 
                 use Data::Dumper;
                 my $temare_path=Tapper::Config->subconfig->{paths}{temare_path};
-                
+
                 $ENV{PYTHONPATH}="$temare_path/src";
                 my $subject = $produce->{subject};
                 my $bitness = $produce->{bitness};
@@ -37,7 +37,7 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
                 my $cmd="$temare_path/temare subjectprep $host $subject $bitness";
                 my $precondition = qx($cmd);
                 die $precondition if $?;
-                
+
                 my $config = try {LoadFile($file)} catch { die "Error occured while loading precondition $precondition:\n$_"};
                 close $fh;
                 unlink $file if -e $file;
