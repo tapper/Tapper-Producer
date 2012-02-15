@@ -52,7 +52,7 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
 
 {
         # help the CPAN indexer
-        package Tapper::MCP::Scheduler::PreconditionProducer::Temare;
+        package Tapper::Producer::Temare;
 }
 
 1;
