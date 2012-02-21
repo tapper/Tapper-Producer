@@ -36,7 +36,12 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
                 $ENV{TAPPER_TEMARE} = $file;
                 my $cmd="$temare_path/temare subjectprep $host $subject $bitness";
                 my $precondition = qx($cmd);
-                die $precondition if $?;
+                if ($?) {
+                        my $error_msg = "Temare error.\n";
+                        $error_msg   .= "Error code: $?\n";
+                        $error_msg   .= "Error message: $precondition\n";
+                        die $error_msg;
+                }
 
                 my $config = try {LoadFile($file)} catch { die "Error occured while loading precondition $precondition:\n$_"};
                 close $fh;
