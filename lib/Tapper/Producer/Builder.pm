@@ -110,7 +110,7 @@ The following options are recognised in the producer precondition:
                         print $fh_stderr $stderr;
                 }
 
-                if ($stdout =~ m/^(###|tarball created: ) (.+)$/m ) {
+                if ($stdout =~ m/^(###|tarball created:)\s*(.+)$/m ) {
                         $new_precondition = {precondition_type => 'package', filename => $2};
                 } else {
                         die "Build server did not provide a package file name";
