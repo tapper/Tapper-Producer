@@ -56,7 +56,7 @@ my $precond = {type => "kernel", repository => "build_test", version=> "HEAD^1",
 my $retval  = $builder->produce($job, $precond);
 is_deeply($retval, {
                     'precondition_yaml' =>
-                    "---\nfilename: kernel/sles11/x86_64/linux-3.2_8694-g53999bf.2012-01-16.x86_64.tgz\nprecondition_type: package\n"},
+                    "---\n- filename: kernel/sles11/x86_64/linux-3.2_8694-g53999bf.2012-01-16.x86_64.tgz\n  precondition_type: package\n"},
           'Produced precondition looks as expected');
 ok(-e "$tempdir/42/config/builder/kernel_server_build_test_HEAD^1.stdout", "STDOUT file $tempdir/42/config/kernel_server_build_test_HEAD^1.stdout file exists");
 ok(-e "$tempdir/42/config/builder/kernel_server_build_test_HEAD^1.stderr", "STDERR file $tempdir/42/config/kernel_server_build_test_HEAD^1.stderr file exists");
