@@ -70,7 +70,7 @@ The following options are recognised in the producer precondition:
                 my $rev  = $produce->{version}     || 'HEAD';
                 my $patches = $produce->{patches}  || [];
                 my $cmd;
-                my $new_precondition;
+                my $new_precondition = [];
 
                 given($type) {
                         when('kernel') { $cmd = 'build_kernel.sh' };
@@ -111,10 +111,16 @@ The following options are recognised in the producer precondition:
                 }
 
                 if ($stdout =~ m/^(###|tarball created:)\s*(.+)$/m ) {
-                        $new_precondition = {precondition_type => 'package', filename => $2};
+                        push @$new_precondition, {precondition_type => 'package', filename => $2};
                 } else {
                         die "Build server did not provide a package file name";
                 }
+
+                # additional source package, needed for some kernels
+                if ($stdout =~ m/^\*\*\*\s*(.+)$/m ) {
+                        push @$new_precondition, {precondition_type => 'package', filename => $1};
+                }
+
                 return {precondition_yaml => YAML::Dump($new_precondition)};
         }
 }
