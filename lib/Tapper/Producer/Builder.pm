@@ -121,7 +121,7 @@ The following options are recognised in the producer precondition:
                         push @$new_precondition, {precondition_type => 'package', filename => $1};
                 }
 
-                return {precondition_yaml => YAML::Dump($new_precondition)};
+                return {precondition_yaml => YAML::Dump(@$new_precondition)};
         }
 }
 
