@@ -10,6 +10,5 @@ BEGIN {
     use_ok( 'Tapper::Producer::SimnowKernel' );
     use_ok( 'Tapper::Producer::Temare' );
 }
-diag( "Testing Tapper::Producer $Tapper::Producer::VERSION, Perl $], $^X" );
 
 done_testing;
