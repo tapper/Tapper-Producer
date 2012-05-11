@@ -1,11 +1,11 @@
-use MooseX::Declare;
-
 ## no critic (RequireUseStrict)
-class Tapper::Producer::SimnowKernel
-{
+package Tapper::Producer::SimnowKernel;
+# ABSTRACT: produce preconditions for simnow kernel testing
+ 
         use YAML;
 
         use 5.010;
+        use Moose;
 
         use aliased 'Tapper::Config';
         use File::stat;
@@ -15,8 +15,9 @@ class Tapper::Producer::SimnowKernel
         # try to get the kernel version by reading the files in the packet
         # this approach works since that way the kernel_version required by gen_initrd
         # even if other approaches would report different version strings
-        method get_version(Str $kernelbuild)
-        {
+        sub get_version {
+                my ($self, $kernelbuild) = @_;
+
                 my @files;
                 if ($kernelbuild =~ m/gz$/) {
                         @files = qx(tar -tzf $kernelbuild);
@@ -33,7 +34,8 @@ class Tapper::Producer::SimnowKernel
                 }
         }
 
-        method produce(Any $job, HashRef $produce) {
+        sub produce {
+                my ($self, $job, $produce) = @_;
 
                 my $pkg_dir     = Config->subconfig->{paths}{package_dir};
                 my $arch        = 'simnow';
@@ -78,9 +80,5 @@ class Tapper::Producer::SimnowKernel
                         precondition_yaml => Dump(@$retval),
                        };
         }
-
-
-
-}
 
 1;

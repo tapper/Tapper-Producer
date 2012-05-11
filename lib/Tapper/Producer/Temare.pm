@@ -1,8 +1,8 @@
-use MooseX::Declare;
-
 ## no critic (RequireUseStrict)
-class Tapper::Producer::Temare
-{
+package Tapper::Producer::Temare;
+# ABSTRACT: produce preconditions via temare
+
+        use Moose;
         use File::Temp 'tempfile';
         use YAML       'LoadFile';
         use Tapper::Config;
@@ -22,8 +22,9 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
 
 =cut
 
-        method produce(Any $job, HashRef $produce)
-        {
+        sub produce {
+                my ($self, $job, $produce) = @_;
+
                 my ($fh, $file) = tempfile( UNLINK => 1 );
 
                 use Data::Dumper;
@@ -52,12 +53,5 @@ external config files (e.g. svm file for xen, .sh files for KVM, ..).
                         precondition_yaml => $precondition
                        };
         }
-
-}
-
-{
-        # help the CPAN indexer
-        package Tapper::Producer::Temare;
-}
 
 1;

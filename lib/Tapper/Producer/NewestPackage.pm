@@ -1,8 +1,8 @@
-use MooseX::Declare;
-
 ## no critic (RequireUseStrict)
-class Tapper::Producer::NewestPackage
-{
+package Tapper::Producer::NewestPackage;
+# ABSTRACT: produce preconditions via find latest changed file
+
+        use Moose;
         use YAML;
 
         use 5.010;
@@ -12,7 +12,8 @@ class Tapper::Producer::NewestPackage
 
         sub younger { stat($a)->mtime() <=> stat($b)->mtime() }
 
-        method produce(Any $job, HashRef $produce) {
+        sub produce {
+                my ($self, $job, $produce) = @_;
 
                 my $source_dir    = $produce->{source_dir};
                 my @files = sort younger <$source_dir/*>;
@@ -32,9 +33,5 @@ class Tapper::Producer::NewestPackage
                         precondition_yaml => Dump(@$retval),
                        };
         }
-
-
-
-}
 
 1;

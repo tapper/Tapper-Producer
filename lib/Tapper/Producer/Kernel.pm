@@ -1,8 +1,8 @@
-use MooseX::Declare;
-
 ## no critic (RequireUseStrict)
-class Tapper::Producer::Kernel
-{
+package Tapper::Producer::Kernel;
+# ABSTRACT: produce preconditions for a kernel package
+
+        use Moose;
         use YAML;
 
         use 5.010;
@@ -15,8 +15,9 @@ class Tapper::Producer::Kernel
         # try to get the kernel version by reading the files in the packet
         # this approach works since that way the kernel_version required by gen_initrd
         # even if other approaches would report different version strings
-        method get_version(Str $kernelbuild)
-        {
+        sub get_version {
+                my ($self, $kernelbuild) = @_;
+
                 my @files;
                 if ($kernelbuild =~ m/gz$/) {
                         @files = qx(tar -tzf $kernelbuild);
@@ -33,7 +34,8 @@ class Tapper::Producer::Kernel
                 }
         }
 
-        method produce(Any $job, HashRef $produce) {
+        sub produce {
+                my ($self, $job, $produce) = @_;
 
                 my $pkg_dir     = Config->subconfig->{paths}{package_dir};
                 
@@ -71,10 +73,4 @@ class Tapper::Producer::Kernel
                         precondition_yaml => Dump(@$retval),
                        };
         }
-
-
-
-}
-
 1;
-

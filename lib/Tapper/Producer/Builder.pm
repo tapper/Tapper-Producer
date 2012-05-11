@@ -1,9 +1,17 @@
-use MooseX::Declare;
+## no critic (RequireUseStrict)
+package Tapper::Producer::Builder;
+# ABSTRACT: produce preconditions from external OSRC builder
 
+        use Moose;
+        use parent "Tapper::Base";
+        use Net::SSH::Perl;
+        use Tapper::Config;
+        use YAML;
+        use autodie;
 
-=head1 NAME
+        use 5.010;
 
-Tapper::Producer::Builder - Build a package from predefined repository.
+        has cfg => (isa => 'HashRef', is => 'ro', default => sub {Tapper::Config->subconfig});
 
 =head1 SYNOPSIS
 
@@ -13,10 +21,14 @@ new ones, in this case a package precondition.
 
  use Tapper::Producer::Builder;
  my $builder = Tapper::Producer::Builder->new();
- $builder->produce($job, {type => 'kernel', buildserver => 'hostname', repository => 'linus', version => 'HEAD'});
+ $builder->produce($job, {type => 'kernel',
+                          buildserver => 'hostname',
+                          repository => 'linus',
+                          version => 'HEAD'});
 
 A typical precondition to trigger this producer in Tapper might look
 like this:
+
   precondition_type: produce
   producer: Builder
   type: xen            # required
@@ -28,20 +40,6 @@ like this:
   - /path/to/second/patchfile
 
 =head1 FUNCTIONS
-
-=cut
-
-## no critic (RequireUseStrict)
-class Tapper::Producer::Builder extends Tapper::Base
-{
-        use Net::SSH::Perl;
-        use Tapper::Config;
-        use YAML;
-        use autodie;
-
-        use 5.010;
-
-        has cfg => (isa => 'HashRef', is => 'ro', default => sub {Tapper::Config->subconfig});
 
 =head2 produce
 
@@ -63,7 +61,10 @@ The following options are recognised in the producer precondition:
 
 =cut
 
-        method produce(Any $job  where {$_ and $_->can('testrun_id')}, HashRef $produce) {
+        sub produce {
+                my ($self, $job, $produce) = @_;
+
+                unless ($job && $job->can('testrun_id')) { die "Parameter 'job' does not provide testrun_id" }
                 my $type = $produce->{type} // '';
                 my $host = $produce->{buildserver} || die "Missing required parameter 'buildserver'";
                 my $repo = $produce->{repository}  || die "Missing required parameter 'repository'";
@@ -123,7 +124,5 @@ The following options are recognised in the producer precondition:
 
                 return {precondition_yaml => YAML::Dump(@$new_precondition)};
         }
-}
 
 1;
-
