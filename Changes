@@ -1,5 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - misc bugfixes, better error handling
+        - unified producers to die in case of an error
+        - upload output as file
+        - new Producer frontend for OSRC internal buildserver
         - big Dist::Zilla roundhouse kick
 
