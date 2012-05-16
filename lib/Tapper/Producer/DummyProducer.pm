@@ -3,6 +3,12 @@ package Tapper::Producer::DummyProducer;
 
         use Moose;
 
+=head2 produce
+
+Produce resulting precondition.
+
+=cut
+
         sub produce {
                 my ($self, $job, $precondition) = @_;
 

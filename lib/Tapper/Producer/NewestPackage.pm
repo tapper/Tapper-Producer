@@ -10,7 +10,19 @@ package Tapper::Producer::NewestPackage;
         use Tapper::Config;
         use File::stat;
 
+=head2 younger
+
+Comparator for files by mtime.
+
+=cut
+
         sub younger { stat($a)->mtime() <=> stat($b)->mtime() }
+
+=head2 produce
+
+Produce resulting precondition.
+
+=cut
 
         sub produce {
                 my ($self, $job, $produce) = @_;

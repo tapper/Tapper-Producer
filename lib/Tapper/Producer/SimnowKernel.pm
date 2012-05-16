@@ -1,7 +1,7 @@
 ## no critic (RequireUseStrict)
 package Tapper::Producer::SimnowKernel;
 # ABSTRACT: produce preconditions for simnow kernel testing
- 
+
         use YAML;
 
         use 5.010;
@@ -10,11 +10,23 @@ package Tapper::Producer::SimnowKernel;
         use aliased 'Tapper::Config';
         use File::stat;
 
+=head2 younger
+
+Comparator for files by mtime.
+
+=cut
+
         sub younger { stat($a)->mtime() <=> stat($b)->mtime() }
 
-        # try to get the kernel version by reading the files in the packet
-        # this approach works since that way the kernel_version required by gen_initrd
-        # even if other approaches would report different version strings
+=head2 get_version
+
+Try to get the kernel version by reading the files in the packet.
+This approach works since that way the kernel_version required by
+gen_initrd even if other approaches would report different version
+strings.
+
+=cut
+
         sub get_version {
                 my ($self, $kernelbuild) = @_;
 
@@ -33,6 +45,12 @@ package Tapper::Producer::SimnowKernel;
                         }
                 }
         }
+
+=head2 produce
+
+Produce resulting precondition.
+
+=cut
 
         sub produce {
                 my ($self, $job, $produce) = @_;
@@ -75,7 +93,7 @@ package Tapper::Producer::SimnowKernel;
                         $topic .= $kernel_major_version;
                 }
                 return {
-                        
+
                         topic =>  $topic,
                         precondition_yaml => Dump(@$retval),
                        };

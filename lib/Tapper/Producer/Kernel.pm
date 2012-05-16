@@ -10,11 +10,22 @@ package Tapper::Producer::Kernel;
         use aliased 'Tapper::Config';
         use File::stat;
 
+=head2 younger
+
+Comparator for files by mtime.
+
+=cut
+
         sub younger { stat($a)->mtime() <=> stat($b)->mtime() }
 
-        # try to get the kernel version by reading the files in the packet
-        # this approach works since that way the kernel_version required by gen_initrd
-        # even if other approaches would report different version strings
+=head2 get_version
+
+Try to get the kernel version by reading the files in the packet. This
+approach works since that way the kernel_version required by gen_initrd
+even if other approaches would report different version strings.
+
+=cut
+
         sub get_version {
                 my ($self, $kernelbuild) = @_;
 
@@ -34,11 +45,17 @@ package Tapper::Producer::Kernel;
                 }
         }
 
+=head2 produce
+
+Produce resulting precondition.
+
+=cut
+
         sub produce {
                 my ($self, $job, $produce) = @_;
 
                 my $pkg_dir     = Config->subconfig->{paths}{package_dir};
-                
+
                 # project may be x86_64, stable/x86_64, ...
                 my $project        = $produce->{arch} // 'x86_64';
                 my $kernel_path = $pkg_dir."/kernel";
