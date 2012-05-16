@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+4.0.1     2012-05-16
         - misc bugfixes, better error handling
         - unified producers to die in case of an error
         - upload output as file
