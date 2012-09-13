@@ -15,21 +15,18 @@ sub login
 sub cmd
 {
 return '
-Will build changeset: HEAD in repository: linus, without patches.
-buildling latest changeset
-apply fix for cpu_toggle
-patching file kernel/printk.c
-Hunk #1 succeeded at 1153 (offset 113 lines).
 cleaning
 config
 building
-kern_name = 3.2.0-53999bf3-linus+
-kern_version = 3.2_8694-g53999bf
 copying
 ---
  - /path/to/file1
  - /here/be/file2
 ...
+Will trigger 3 OSRC feature tests
+Special tests: http://tapper/tapper/testruns/idlist/1,2,3
+Normal tests: http://tapper/tapper/testruns/idlist/4,5,6
+Add to list for Additional RANDCONF tests on build-server
 '}
 
 package main;
