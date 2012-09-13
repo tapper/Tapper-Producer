@@ -111,7 +111,7 @@ The following options are recognised in the producer precondition:
                         print $fh_stderr $stderr;
                 }
 
-                if (my ($output) = $stdout =~ m/(?:\n|^)---\n(.+\n).../s ) {
+                if (my ($output) = $stdout =~ m/(?:\n|^)---\n(.+\n)\.\.\./s ) {
                         my $yaml = YAML::Load($output);
                         foreach my $package_name (@$yaml) {
                                 push @$new_precondition, {precondition_type => 'package', filename => $package_name};
