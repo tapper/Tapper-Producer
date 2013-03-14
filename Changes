@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - new Tapper::Producer::ExternalProgram
+          a bridge to external non-Perl producers
 
 4.1.1     2012-11-20
         - dzil pluginbundle TAPPER
