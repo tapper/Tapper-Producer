@@ -2,6 +2,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - just version bump for v5
 
 4.1.3     2013-03-14
         - drop T::Producer::Build
