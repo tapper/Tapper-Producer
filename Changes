@@ -2,6 +2,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+        - Assert OS Unix
 
 5.0.0     2016-02-15
         - just version bump for v5
